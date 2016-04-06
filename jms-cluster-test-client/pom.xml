@@ -32,6 +32,18 @@
 			<artifactId>jboss-as-jms-client-bom</artifactId>
 			<type>pom</type>
 		</dependency>
+
+        <dependency>
+            <groupId>com.tibco</groupId>
+            <artifactId>tibjms</artifactId>
+            <version>6.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.tibco</groupId>
+            <artifactId>tibcrypt</artifactId>
+            <version>6.1.0</version>
+        </dependency>
 	</dependencies>
 
 	<build>

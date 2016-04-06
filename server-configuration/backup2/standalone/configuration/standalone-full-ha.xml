@@ -460,7 +460,7 @@
         <subsystem xmlns="urn:jboss:domain:naming:1.4">
             <remote-naming/>
             <bindings>
-                <external-context name="java:global/remoteJMS/"
+                <external-context name="java:global/remoteTibcoJMS/"
                                   module="org.jboss.genericjms.provider"
                                   class="javax.naming.InitialContext">
                     <environment>
@@ -476,7 +476,29 @@
         <subsystem xmlns="urn:jboss:domain:remoting:1.2">
             <connector name="remoting-connector" socket-binding="remoting" security-realm="ApplicationRealm"/>
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:resource-adapters:1.1"/>
+        <subsystem xmlns="urn:jboss:domain:resource-adapters:1.1">
+            <resource-adapters>
+                <resource-adapter id="org.jboss.genericjms">
+                    <module slot="main" id="org.jboss.genericjms"/>
+                    <transaction-support>NoTransaction</transaction-support>
+                    <connection-definitions>
+                        <connection-definition class-name="org.jboss.resource.adapter.jms.JmsManagedConnectionFactory"
+                                               jndi-name="java:/jms/XAQCF"
+                                               pool-name="XAQCF">
+                            <config-property name="ConnectionFactory">
+                                XAQCF
+                            </config-property>
+                            <config-property name="JndiParameters">
+                                java.naming.factory.initial=com.tibco.tibjms.naming.TibjmsInitialContextFactory;java.naming.provider.url=127.0.0.1:7222
+                            </config-property>
+                            <security>
+                                <application/>
+                            </security>
+                        </connection-definition>
+                    </connection-definitions>
+                </resource-adapter>
+            </resource-adapters>
+        </subsystem>
         <subsystem xmlns="urn:jboss:domain:sar:1.0"/>
         <subsystem xmlns="urn:jboss:domain:security:1.2">
             <security-domains>
