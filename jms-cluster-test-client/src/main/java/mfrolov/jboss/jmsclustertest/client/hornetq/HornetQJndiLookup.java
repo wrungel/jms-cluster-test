@@ -1,4 +1,4 @@
-package mfrolov.jboss.jmsclustertest.client;
+package mfrolov.jboss.jmsclustertest.client.hornetq;
 
 import java.util.Properties;
 
@@ -6,22 +6,22 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-public class JndiLookup {
+public class HornetQJndiLookup {
 
 	private static final String STD_IP = "127.0.0.1";
 	private static final String STD_PORT = "4447";
 
 	private final Context context;
 
-	public JndiLookup() throws NamingException {
+	public HornetQJndiLookup() throws NamingException {
 		this(STD_IP, STD_PORT);
 	}
 
-	public JndiLookup(String ip, String port) throws NamingException {
+	public HornetQJndiLookup(String ip, String port) throws NamingException {
 		this(STD_IP, STD_PORT, null, null);
 	}
 
-	public JndiLookup(String ip, String port, String user, String pass)
+	public HornetQJndiLookup(String ip, String port, String user, String pass)
 			throws NamingException {
 		if (ip == null || port == null) {
 			ip = STD_IP;

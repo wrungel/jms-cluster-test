@@ -13,24 +13,5 @@ import javax.jms.TextMessage;
 		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
 		@ActivationConfigProperty(propertyName = "destination", propertyValue = "jms/queue/test")})
 @ResourceAdapter(value="hornetq-ra")
-public class HornetQMDB implements MessageListener {
-
-	@Override
-	public void onMessage(Message message) {
-		if (message instanceof TextMessage) {
-			try {
-				System.out.println("----------------");
-				System.out.println("Received: "
-						+ ((TextMessage) message).getText());
-				System.out.println("----------------");
-			} catch (JMSException e) {
-				e.printStackTrace();
-			}
-		} else {
-			System.out.println("----------------");
-			System.out.println("Received: " + message);
-			System.out.println("----------------");
-		}
-	}
-
+public class HornetQMDB extends MessageProcessor {
 }

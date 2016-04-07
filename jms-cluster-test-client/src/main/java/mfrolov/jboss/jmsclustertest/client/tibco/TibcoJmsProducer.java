@@ -1,5 +1,7 @@
 package mfrolov.jboss.jmsclustertest.client.tibco;
 
+import mfrolov.jboss.jmsclustertest.client.MessageGroupingSender;
+
 import javax.jms.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +25,6 @@ public class TibcoJmsProducer {
         connection = factory.createConnection(serverConfiguration.getUserName(), serverConfiguration.getPassword());
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         destinationMap = new HashMap<>();
-        msgProducer = session.createProducer(null);
         System.out.println("Setting up JMS connection to " + serverConfiguration.getServerUrl());
     }
 
@@ -36,19 +37,22 @@ public class TibcoJmsProducer {
         return destination;
     }
 
-    public void sendMessage(String queueName, String messageText) {
+    public void sendMessage(String queueName) {
         try {
             Destination queue = getDestination(queueName);
+            msgProducer = session.createProducer(queue);
             TextMessage msg = session.createTextMessage();
-            msg.setText(messageText);
-            msgProducer.send(queue, msg);
+            new MessageGroupingSender().send(msgProducer, msg);
+
         } catch (JMSException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static void main(String[] args) throws JMSException {
         TibcoJmsProducer messageSender = new TibcoJmsProducer(TibcoServerConfigurationFactory.localTibcoEms());
-        messageSender.sendMessage("Queue1", "hello from Globe");
+        messageSender.sendMessage("Queue1");
     }
 }

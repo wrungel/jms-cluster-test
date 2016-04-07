@@ -1,4 +1,4 @@
-package mfrolov.jboss.jmsclustertest.client;
+package mfrolov.jboss.jmsclustertest.client.hornetq;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -12,7 +12,7 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 
-public class MessagesReceiver implements MessageListener {
+public class HornetQJmsReceiver implements MessageListener {
 
 	private ConnectionFactory connectionFactory;
 
@@ -23,17 +23,17 @@ public class MessagesReceiver implements MessageListener {
 
 	public static void main(String[] args) throws Exception {
 
-		MessagesReceiver reciever;
+		HornetQJmsReceiver reciever;
 		
 		switch (args.length) {
 		case 4:
-			reciever = new MessagesReceiver(args[0], args[1], args[2], args[3]);
+			reciever = new HornetQJmsReceiver(args[0], args[1], args[2], args[3]);
 			break;
 		case 2:
-			reciever = new MessagesReceiver(args[0], args[1]);
+			reciever = new HornetQJmsReceiver(args[0], args[1]);
 			break;
 		default:
-			reciever = new MessagesReceiver();
+			reciever = new HornetQJmsReceiver();
 		}
 		
 		reciever.consum();
@@ -44,18 +44,18 @@ public class MessagesReceiver implements MessageListener {
 
 	}
 
-	public MessagesReceiver() throws Exception {
+	public HornetQJmsReceiver() throws Exception {
 		this(null, null);
 	}
 	
-	public MessagesReceiver(String ip, String port) throws Exception {
+	public HornetQJmsReceiver(String ip, String port) throws Exception {
 		this(ip, port, "admin", "secret");
 	}
 
-	public MessagesReceiver(String ip, String port, String user, String pass) throws Exception {
+	public HornetQJmsReceiver(String ip, String port, String user, String pass) throws Exception {
 		this.user = user;
 		this.pass = pass;
-		JndiLookup jndiLookup = new JndiLookup(ip, port, user, pass);
+		HornetQJndiLookup jndiLookup = new HornetQJndiLookup(ip, port, user, pass);
 		connectionFactory = jndiLookup.lookup(ConnectionFactory.class,
 				"jms/RemoteConnectionFactory");
 		queue = jndiLookup.lookup(Queue.class, "jms/queue/test");

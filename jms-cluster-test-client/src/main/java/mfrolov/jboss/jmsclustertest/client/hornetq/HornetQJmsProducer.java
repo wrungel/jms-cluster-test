@@ -1,4 +1,6 @@
-package mfrolov.jboss.jmsclustertest.client;
+package mfrolov.jboss.jmsclustertest.client.hornetq;
+
+import mfrolov.jboss.jmsclustertest.client.MessageGroupingSender;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -9,7 +11,7 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-public class Producer {
+public class HornetQJmsProducer {
 
 	private String user;
 	private String pass;
@@ -19,35 +21,35 @@ public class Producer {
 
 	public static void main(String[] args) throws Exception {
 
-		Producer sender;
+		HornetQJmsProducer sender;
 
 		switch (args.length) {
 		case 4:
-			sender = new Producer(args[0], args[1], args[2], args[3]);
+			sender = new HornetQJmsProducer(args[0], args[1], args[2], args[3]);
 			break;
 		case 2:
-			sender = new Producer(args[0], args[1]);
+			sender = new HornetQJmsProducer(args[0], args[1]);
 			break;
 		default:
-			sender = new Producer();
+			sender = new HornetQJmsProducer();
 		}
 
 		sender.sendTextMessages("Message number ");
 	}
 
-	public Producer() throws Exception {
+	public HornetQJmsProducer() throws Exception {
 		this(null, null);
 	}
 
-	public Producer(String ip, String port) throws Exception {
+	public HornetQJmsProducer(String ip, String port) throws Exception {
 		this(ip, port, "admin", "secret");
 	}
 
-	public Producer(String ip, String port, String user, String pass)
+	public HornetQJmsProducer(String ip, String port, String user, String pass)
 			throws Exception {
 		this.user = user;
 		this.pass = pass;
-		JndiLookup jndiLookup = new JndiLookup(ip, port, user, pass);
+		HornetQJndiLookup jndiLookup = new HornetQJndiLookup(ip, port, user, pass);
 		connectionFactory = jndiLookup.lookup(ConnectionFactory.class,
 				"jms/RemoteConnectionFactory");
 		queue = jndiLookup.lookup(Queue.class, "jms/queue/test");
@@ -79,15 +81,7 @@ public class Producer {
 			connection.start();
 			TextMessage message = session.createTextMessage();
 
-			int i = 0;
-			while (i < 10) {
-				String groupId = (i % 2 == 0) ? "A" : "B";
-				message.setStringProperty("JMSXGroupID", groupId);
-				message.setText(text + i++);
-				messageProducer.send(message);
-				Thread.sleep(250);
-				System.out.println("send message " + i + ", group " + groupId);
-			}
+            new MessageGroupingSender().send(messageProducer, message);
 
 		} finally {
 			try {

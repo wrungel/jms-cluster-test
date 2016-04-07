@@ -68,7 +68,7 @@
 						<argument>-classpath</argument>
 						<classpath>
 						</classpath>
-						<argument>mfrolov.jboss.jmsclustertest.client.Producer</argument>
+						<argument>mfrolov.jboss.jmsclustertest.client.hornetq.HornetQJmsProducer</argument>
 
 						<argument>127.0.0.1</argument>
 						<argument>4447</argument>

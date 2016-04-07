@@ -26,6 +26,7 @@
 			<scope>provided</scope>
 		</dependency>
 
+        <!-- for @ResourceAdapter annotation -->
 		<dependency>
 			<groupId>org.jboss.ejb3</groupId>
 			<artifactId>jboss-ejb3-ext-api</artifactId>
