@@ -37,22 +37,18 @@ public class TibcoJmsProducer {
         return destination;
     }
 
-    public void sendMessage(String queueName) {
+    public void send(String queueName) {
         try {
             Destination queue = getDestination(queueName);
             msgProducer = session.createProducer(queue);
-            TextMessage msg = session.createTextMessage();
-            new MessageGroupingSender().send(msgProducer, msg);
-
-        } catch (JMSException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+            new MessageGroupingSender(msgProducer, session).send();
+        } catch (JMSException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static void main(String[] args) throws JMSException {
         TibcoJmsProducer messageSender = new TibcoJmsProducer(TibcoServerConfigurationFactory.localTibcoEms());
-        messageSender.sendMessage("Queue1");
+        messageSender.send("Queue1");
     }
 }

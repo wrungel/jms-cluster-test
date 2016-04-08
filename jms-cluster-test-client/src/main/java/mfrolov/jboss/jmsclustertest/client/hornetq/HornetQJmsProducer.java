@@ -2,14 +2,7 @@ package mfrolov.jboss.jmsclustertest.client.hornetq;
 
 import mfrolov.jboss.jmsclustertest.client.MessageGroupingSender;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.ExceptionListener;
-import javax.jms.JMSException;
-import javax.jms.MessageProducer;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
+import javax.jms.*;
 
 public class HornetQJmsProducer {
 
@@ -34,7 +27,7 @@ public class HornetQJmsProducer {
 			sender = new HornetQJmsProducer();
 		}
 
-		sender.sendTextMessages("Message number ");
+		sender.send();
 	}
 
 	public HornetQJmsProducer() throws Exception {
@@ -55,7 +48,7 @@ public class HornetQJmsProducer {
 		queue = jndiLookup.lookup(Queue.class, "jms/queue/test");
 	}
 
-	private void sendTextMessages(final String text) throws Exception {
+	private void send() throws Exception {
 		Connection connection = null;
 		Session session = null;
 		MessageProducer messageProducer = null;
@@ -74,14 +67,11 @@ public class HornetQJmsProducer {
 					
 				}
 			});
-		
-			
+
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			messageProducer = session.createProducer(queue);
 			connection.start();
-			TextMessage message = session.createTextMessage();
-
-            new MessageGroupingSender().send(messageProducer, message);
+            new MessageGroupingSender(messageProducer, session).send();
 
 		} finally {
 			try {
