@@ -12,18 +12,11 @@ public class MessageProcessor implements MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        String jmsxGroupID;
-        int randomMillis = ThreadLocalRandom.current().nextInt(1000);
-
         try {
-            jmsxGroupID = message.getStringProperty("JMSXGroupID");
-        } catch (JMSException e) {
-            jmsxGroupID = "JMSException: " + e.getMessage();
-        }
-        try {
+            int randomMillis = ThreadLocalRandom.current().nextInt(1000);
+            String jmsxGroupID = message.getStringProperty("JMSXGroupID");
             String text = ((TextMessage) message).getText();
-            System.out.println(format("[S]  %s:%s - sleep %d",
-                    jmsxGroupID, text, randomMillis));
+            System.out.println(format("[S]  %s:%s - sleep %d", jmsxGroupID, text, randomMillis));
             Thread.sleep(randomMillis);
             System.out.println(format("[E]  %s:%s", jmsxGroupID, text));
         } catch (InterruptedException | JMSException  e) {

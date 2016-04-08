@@ -8,7 +8,7 @@ for server in live1 live2 backup1 backup2
 do
    server_dir="$SERVERS_DIR/$server"
    absolute_module_dir="$server_dir/$MODULE_DIR"
-   echo "Installing $absolute_module_dir"
+   echo "Installing $server_dir"
    mkdir -p $absolute_module_dir
    cat << EOF > $absolute_module_dir/module.xml
 <module xmlns="urn:jboss:module:1.1" name="org.jboss.genericjms.provider">
@@ -23,7 +23,9 @@ do
 	</dependencies>
 </module>
 EOF
-    #cp tibjms.jar tibcrypt.jar $absolute_module_dir/
-    echo "TODO: copy manually tibjms.jar tibcrypt.jar to $absolute_module_dir/"
+    if [ ! -f $absolute_module_dir/tibjms.jar ] || [ ! -f $absolute_module_dir/tibcrypt.jar ]; then
+        #cp tibjms.jar tibcrypt.jar $absolute_module_dir/
+        echo "TODO: copy manually tibjms.jar tibcrypt.jar to $absolute_module_dir/"
+    fi
     cp "$server/standalone/configuration/standalone-full-ha.xml" "$SERVERS_DIR/$server/standalone/configuration/"
 done

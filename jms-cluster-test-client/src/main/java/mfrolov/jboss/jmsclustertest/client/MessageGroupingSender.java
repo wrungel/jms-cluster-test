@@ -7,12 +7,13 @@ import java.util.Random;
 
 public class MessageGroupingSender {
 
+    private static final String[] groups = new String[] {"A", "B", "C", "D"};
     Random random = new Random();
 
     public void send(MessageProducer messageProducer, TextMessage message) throws JMSException, InterruptedException {
         int i = 0;
         while (i < 50) {
-            String groupId = (i % 2 == 0) ? "A" : "B";
+            String groupId = groups[i % groups.length];
             message.setStringProperty("JMSXGroupID", groupId);
             String text = String.format("%03d", (i++)/2);
             message.setText(text);
